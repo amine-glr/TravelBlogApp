@@ -17,6 +17,7 @@ namespace TravelBlogApp.Controllers
         public CategoriesController(ApplicationDbContext context)
         {
             _context = context;
+
         }
 
         // GET: Categories
