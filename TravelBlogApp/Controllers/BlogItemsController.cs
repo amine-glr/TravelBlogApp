@@ -22,7 +22,7 @@ namespace TravelBlogApp.Controllers
         // GET: BlogItems
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.BlogItems.Include(b => b.Category);
+            var applicationDbContext = _context.BlogItems.Include(b => b.Category).OrderByDescending(t=>t.CreatedDate);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -48,7 +48,7 @@ namespace TravelBlogApp.Controllers
         // GET: BlogItems/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            ViewBag.CategorySelectList = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
@@ -82,7 +82,7 @@ namespace TravelBlogApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", blogItem.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", blogItem.CategoryId);
             return View(blogItem);
         }
 
@@ -118,7 +118,7 @@ namespace TravelBlogApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", blogItem.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", blogItem.CategoryId);
             return View(blogItem);
         }
 
@@ -150,6 +150,31 @@ namespace TravelBlogApp.Controllers
             _context.BlogItems.Remove(blogItem);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        
+
+        private async Task<ActionResult> ChangeStatus(int id,bool status)
+        {
+            var blogItemItem = _context.BlogItems.FirstOrDefault(t => t.Id == id);
+            if (blogItemItem == null)
+            {
+                return NotFound();
+            }
+            blogItemItem.IsPublished = status;
+
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<ActionResult> Publish(int id)
+        {
+            return await ChangeStatus(id, true);
+        }
+        public async Task<ActionResult> UndoPublish(int id)
+        {
+            return await ChangeStatus(id, false);
         }
 
         private bool BlogItemExists(int id)
