@@ -1,8 +1,53 @@
-﻿@{
+﻿@model SearchViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Travel Blogs</h1>
+
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+              Title
+            </th>
+            <th>
+               Category
+            </th>
+            <th>
+                Content
+            </th>
+            <th>
+               CreatedDate
+            </th>
+
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Result)
+        {
+            <tr>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Title)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>

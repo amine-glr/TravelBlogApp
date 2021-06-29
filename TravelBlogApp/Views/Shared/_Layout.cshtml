@@ -28,6 +28,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">My Categories</a>
                         </li>
                     </ul>
+                    <form asp-controller="Home" asp-action="Index" method="get">
+                        <input name="SearchText" id="SearchText" />
+                        <input type="submit" value="Search" />
+                    </form>
                     <partial name="_LoginPartial" />
                 </div>
             </div>

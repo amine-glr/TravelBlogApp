@@ -1,35 +1,46 @@
-﻿@model IEnumerable<TravelBlogApp.Models.BlogItem>
+﻿@model SearchViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>My Blogs</h1>
 
 <p>
     <a asp-action="Create">Add a New Post</a>
 </p>
+<form asp-action="Index" asp-controller="BlogItems" method="get">
+    <div class="form-group">
+        <label asp-for="SearchText" class="control-label"></label>
+        <input asp-for="SearchText" class="form-control" />
+
+    </div>
+ 
+    <div class="form-group">
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+              Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+               Category
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+                CreatedDate
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsPublished)
+               IsPublished
             </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Result) {
         <tr>
             <td>
                 @if (item.IsPublished)

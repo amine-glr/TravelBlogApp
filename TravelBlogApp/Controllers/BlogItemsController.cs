@@ -20,10 +20,21 @@ namespace TravelBlogApp.Controllers
         }
 
         // GET: BlogItems
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SearchViewModel searchViewModel)
         {
-            var applicationDbContext = _context.BlogItems.Include(b => b.Category).OrderByDescending(t=>t.CreatedDate);
-            return View(await applicationDbContext.ToListAsync());
+            var query = _context.BlogItems
+                .Include(b => b.Category).AsQueryable();
+                
+            if (!String.IsNullOrWhiteSpace(searchViewModel.SearchText))
+            {
+                query = query.Where(t => t.Title.Contains(searchViewModel.SearchText ));
+            }
+            
+            query=query.OrderByDescending(t => t.CreatedDate);
+
+            searchViewModel.Result = await query.ToListAsync();
+
+            return View(searchViewModel);
         }
 
         // GET: BlogItems/Details/5
