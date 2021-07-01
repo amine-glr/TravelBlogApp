@@ -10,5 +10,7 @@ namespace TravelBlogApp.Models
         public string SearchText { get; set; }
 
         public List<BlogItem> Result { get; set; }
+
+        public List<Category> Result2 { get; set; }
     }
 }

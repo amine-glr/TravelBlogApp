@@ -11,16 +11,19 @@
     <thead>
         <tr>
             <th>
-              Title
+                Title
             </th>
             <th>
-               Category
+                Category
             </th>
             <th>
                 Content
             </th>
             <th>
-               CreatedDate
+                Created By
+            </th>
+            <th>
+                Created Date
             </th>
 
 
@@ -30,24 +33,27 @@
     <tbody>
         @foreach (var item in Model.Result)
         {
-            <tr>
-                <td>
+        <tr>
+            <td>
 
-                    @Html.DisplayFor(modelItem => item.Title)
+                @Html.DisplayFor(modelItem => item.Title)
 
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                </td>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author.NickName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
 
 
-            </tr>
+        </tr>
         }
     </tbody>
 </table>

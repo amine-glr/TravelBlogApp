@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,20 +12,24 @@ using TravelBlogApp.Models;
 
 namespace TravelBlogApp.Controllers
 {
+    [Authorize]
     public class BlogItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<Author> _userManager;
 
-        public BlogItemsController(ApplicationDbContext context)
+        public BlogItemsController(ApplicationDbContext context, UserManager<Author> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: BlogItems
         public async Task<IActionResult> Index(SearchViewModel searchViewModel)
         {
+            var author = await _userManager.GetUserAsync(HttpContext.User);
             var query = _context.BlogItems
-                .Include(b => b.Category).AsQueryable();
+                .Include(b => b.Category).Where(t=>t.AuthorId==author.Id).AsQueryable();
                 
             if (!String.IsNullOrWhiteSpace(searchViewModel.SearchText))
             {
@@ -57,6 +63,7 @@ namespace TravelBlogApp.Controllers
         }
 
         // GET: BlogItems/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewBag.CategorySelectList = new SelectList(_context.Categories, "Id", "Name");
@@ -68,8 +75,13 @@ namespace TravelBlogApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,IsPublished,CategoryId")] BlogItem blogItem)
         {
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+
+            blogItem.AuthorId = author.Id;
+
             if (ModelState.IsValid)
             {
                 _context.Add(blogItem);

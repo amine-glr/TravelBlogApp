@@ -18,5 +18,9 @@ namespace TravelBlogApp.Models
         public string Description { get; set; }
 
         public virtual List<BlogItem> BlogItems { get; set; }
+
+        public string AuthorId { get; set; }
+
+        public virtual Author Author { get; set; }
     }
 }

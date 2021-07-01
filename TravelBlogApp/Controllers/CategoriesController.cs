@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,20 +12,32 @@ using TravelBlogApp.Models;
 
 namespace TravelBlogApp.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<Author> _userManager;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, UserManager<Author> userManager)
         {
             _context = context;
-
+            _userManager = userManager;
         }
 
         // GET: Categories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SearchViewModel searchViewModel)
         {
-            return View(await _context.Categories.ToListAsync());
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+            var query = _context.Categories.Where(t => t.AuthorId == author.Id).AsQueryable();
+            if (!String.IsNullOrWhiteSpace(searchViewModel.SearchText))
+            {
+                query = query.Where(t => t.Name.Contains(searchViewModel.SearchText));
+            }
+
+            searchViewModel.Result2 = await query.ToListAsync();
+
+            return View(searchViewModel);
+           
         }
 
         // GET: Categories/Details/5
@@ -45,6 +59,7 @@ namespace TravelBlogApp.Controllers
         }
 
         // GET: Categories/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -55,8 +70,12 @@ namespace TravelBlogApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Category category)
         {
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+
+            category.AuthorId = author.Id;
             if (ModelState.IsValid)
             {
                 _context.Add(category);

@@ -34,8 +34,8 @@ namespace TravelBlogApp.Models
         public virtual Category Category { get; set; }
 
 
-        /*  public string AuthorId { get; set; }
+          public string AuthorId { get; set; }
 
-          public virtual Author Author { get; set; } */
+          public virtual Author Author { get; set; } 
     }
 }
