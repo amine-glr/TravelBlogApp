@@ -50,6 +50,12 @@ namespace TravelBlogApp.Controllers
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+            if (category.AuthorId != author.Id)
+            {
+                return Unauthorized();
+            }
             if (category == null)
             {
                 return NotFound();
@@ -94,6 +100,11 @@ namespace TravelBlogApp.Controllers
             }
 
             var category = await _context.Categories.FindAsync(id);
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+            if (category.AuthorId != author.Id)
+            {
+                return Unauthorized();
+            }
             if (category == null)
             {
                 return NotFound();
@@ -117,6 +128,15 @@ namespace TravelBlogApp.Controllers
             {
                 try
                 {
+                    var oldcategory = await _context.Categories.FindAsync(id);
+                    var author = await _userManager.GetUserAsync(HttpContext.User);
+                    if (oldcategory.AuthorId != author.Id)
+                    {
+                        return Unauthorized();
+                    }
+                    oldcategory.Name = category.Name;
+                    oldcategory.Description = category.Description;
+
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
@@ -146,6 +166,11 @@ namespace TravelBlogApp.Controllers
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+            if (category.AuthorId != author.Id)
+            {
+                return Unauthorized();
+            }
             if (category == null)
             {
                 return NotFound();

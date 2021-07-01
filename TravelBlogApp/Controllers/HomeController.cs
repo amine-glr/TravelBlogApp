@@ -26,6 +26,7 @@ namespace TravelBlogApp.Controllers
         {
            var query= dbContext.BlogItems
                 .Include(t=>t.Category)
+                 .Include(t => t.Author)
                 .Where(b => b.IsPublished == true).AsQueryable();
 
             if (!String.IsNullOrWhiteSpace(searchViewModel.SearchText))

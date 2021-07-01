@@ -54,6 +54,11 @@ namespace TravelBlogApp.Controllers
             var blogItem = await _context.BlogItems
                 .Include(b => b.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+            if (blogItem.AuthorId != author.Id)
+            {
+                return Unauthorized();
+            }
             if (blogItem == null)
             {
                 return NotFound();
@@ -88,7 +93,7 @@ namespace TravelBlogApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", blogItem.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", blogItem.CategoryId);
             return View(blogItem);
         }
 
@@ -101,6 +106,11 @@ namespace TravelBlogApp.Controllers
             }
 
             var blogItem = await _context.BlogItems.FindAsync(id);
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+            if (blogItem.AuthorId != author.Id)
+            {
+                return Unauthorized();
+            }
             if (blogItem == null)
             {
                 return NotFound();
@@ -114,7 +124,7 @@ namespace TravelBlogApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,IsPublished,CategoryId")] BlogItem blogItem)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,IsPublished,CategoryId,CreatedDate,AuthorId")] BlogItem blogItem)
         {
             if (id != blogItem.Id)
             {
@@ -125,7 +135,19 @@ namespace TravelBlogApp.Controllers
             {
                 try
                 {
-                    _context.Update(blogItem);
+                    var oldBlog = await _context.BlogItems.FindAsync(id);
+                    var author = await _userManager.GetUserAsync(HttpContext.User);
+                    if (oldBlog.AuthorId != author.Id)
+                    {
+                        return Unauthorized();
+                    }
+                    oldBlog.Title = blogItem.Title;
+                    oldBlog.CreatedDate = blogItem.CreatedDate;
+                    oldBlog.Content = blogItem.Content;
+                    oldBlog.IsPublished = blogItem.IsPublished;
+                    oldBlog.CategoryId = blogItem.CategoryId;
+
+                    _context.Update(oldBlog);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -156,6 +178,11 @@ namespace TravelBlogApp.Controllers
             var blogItem = await _context.BlogItems
                 .Include(b => b.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await _userManager.GetUserAsync(HttpContext.User);
+            if (blogItem.AuthorId != author.Id)
+            {
+                return Unauthorized();
+            }
             if (blogItem == null)
             {
                 return NotFound();
