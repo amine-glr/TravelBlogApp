@@ -6,10 +6,11 @@
     <title>@ViewData["Title"] - TravelBlogApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-warning border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TravelBlogApp</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -27,12 +28,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">My Categories</a>
                         </li>
-                      
+
                     </ul>
-                    <form asp-controller="Home" asp-action="Index" method="get">
-                        <input name="SearchText" id="SearchText" />
-                        <input type="submit" value="Search" />
+                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" asp-controller="Home" asp-action="Index" method="get" style="padding-right: 20px">
+                        <div class="input-group">
+                            <input name="SearchText" id="SearchText" class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                            <button class="btn btn-secondary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
                     </form>
+                 
                     <partial name="_LoginPartial" />
                 </div>
             </div>
