@@ -7,78 +7,75 @@
 <h1>My Blogs</h1>
 
 <p>
-    <a asp-action="Create">Add a New Post</a>
+    <a asp-action="Create" style=" color:goldenrod ">Add a New Post</a>
 </p>
-<form asp-action="Index" asp-controller="BlogItems" method="get">
-    <div class="form-group">
-        <label asp-for="SearchText" class="control-label"></label>
-        <input asp-for="SearchText" class="form-control" />
 
-    </div>
- 
-    <div class="form-group">
-        <input type="submit" value="Search" class="btn btn-primary" />
+<form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" asp-action="Index" asp-controller="BlogItems" method="get" >
+    <div class="input-group">
+        <input asp-for="SearchText" name="SearchText" id="SearchText" class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+        <button class="btn btn-secondary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
     </div>
 </form>
-<table class="table">
+<table class="table" style="margin-top:50px">
     <thead>
         <tr>
             <th>
-              Title
+                Title
             </th>
             <th>
-               Category
+                Category
             </th>
             <th>
                 CreatedDate
             </th>
             <th>
-               IsPublished
+                IsPublished
             </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Result) {
-        <tr>
-            <td>
-                @if (item.IsPublished)
-                {
-                    <span style="COLOR: green">@Html.DisplayFor(modelItem => item.Title)</span>
-                }
-                else
-                {
-                    <span style="COLOR: red">@Html.DisplayFor(modelItem => item.Title)</span>
-                }
+        @foreach (var item in Model.Result)
+        {
+            <tr>
+                <td>
+                    @if (item.IsPublished)
+                    {
+                        <span style="COLOR: green">@Html.DisplayFor(modelItem => item.Title)</span>
+                    }
+                    else
+                    {
+                        <span style="COLOR: red">@Html.DisplayFor(modelItem => item.Title)</span>
+                    }
 
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-             
-                @Html.DisplayFor(modelItem => item.IsPublished)
-            </td>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
 
-            <td>
-                @if (item.IsPublished)
-                {
-                    <a asp-action="UndoPublish" asp-route-id="@item.Id">Undo Publish</a>
-                }
-                else
-                {
-                    <a asp-action="Publish" asp-route-id="@item.Id">Publish</a>
-                }
+                    @Html.DisplayFor(modelItem => item.IsPublished)
+                </td>
 
-                | <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                <td>
+                    @if (item.IsPublished)
+                    {
+                        <a asp-action="UndoPublish" asp-route-id="@item.Id" style=" color:goldenrod ">Undo Publish</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Publish" asp-route-id="@item.Id" style=" color:goldenrod ">Publish</a>
+                    }
+
+                    | <a asp-action="Edit" asp-route-id="@item.Id" style=" color:goldenrod ">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" style=" color:goldenrod ">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" style=" color:goldenrod ">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
